@@ -1,6 +1,7 @@
 //The Projects object. A place to keep all your projects stored for use.
 var Projects = {
-    Conrad: '../../Users/mulli/OneDrive/GitHub/lianatech-CMS/Conrad-landing/'
+    Conrad: '../../Users/mulli/OneDrive/GitHub/lianatech-CMS/Conrad-landing/',
+    Testing: '../Testing/'
 }
 
 /*=============================
@@ -10,7 +11,7 @@ var Projects = {
 ===============================*/
 
 var gulp = require('gulp');
-
+var flatten = require('gulp-flatten')
 var srcMaps = require('gulp-sourcemaps');
 
 //STYLE Dependencies
@@ -35,13 +36,13 @@ var $test = 'dev/',
     $src = 'src/',
     $active = '',
     $set = $test,
-    $JS = 'js/',
-    $CSS = 'css/',
-    $IMG = 'images/';
+    $JS = 'js',
+    $CSS = 'css',
+    $IMG = 'images';
 
 //Sources File Variables
 var $srcHTML = 'src/{*.html,**/*.html}',
-    $srcSCSS = 'src/**/*.scss',
+    $srcSCSS = 'src/{sass,**}/*.scss',
     $srcJS = 'src/{libs,**}/*.js'
 
 /*====================
@@ -61,7 +62,9 @@ function talk (a,t) {
 =========================*/
 
 //Default Run Task
-gulp.task('default',['start'], /*function() {}*/);
+gulp.task('default',['start','sass'], function() {
+    gulp.watch($active+$srcSCSS,['sass'])
+});
 
 //START
 gulp.task('start', function () {
@@ -75,11 +78,11 @@ gulp.task('start', function () {
 //SET THE PARAMATERS
 gulp.task('set-live', function () {
     $set = $liv;
-    console.log('Now the active directory: '+$active);
+    console.log('Now the active directory: '+$set);
 });
 gulp.task('set-dev', function () {
     $set = $test;
-    console.log('Now the active directory: '+$active);
+    console.log('Now the active directory: '+$set);
 });
 
 
@@ -89,7 +92,7 @@ gulp.task('set-dev', function () {
 
 
 gulp.task('sass', function () {
-    talk('SASS styles going to "'+$set+'"',true);
+    talk('SASS styles going to "'+$set+'" at "'+$active+'"',true);
 
     if ($set === $test) {
       return gulp.src($active+$srcSCSS)
