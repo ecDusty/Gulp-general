@@ -67,13 +67,15 @@ gulp.task('default',['start','sass'], function() {
 });
 
 //START
-gulp.task('start', function () {
+gulp.task('start',function () {
     //Set the currently live project
     $active = Projects.Conrad;
     talk('That active projects source: '+$active);
     
     //add task to delete dev and live files
 });
+
+gulp.task('live', ['set-live','default']);
 
 //SET THE PARAMATERS
 gulp.task('set-live', function () {
@@ -101,7 +103,7 @@ gulp.task('sass', function () {
                 .on('error', sass.logError))
           .pipe(autoprefixer())
           .pipe(srcMaps.write())
-          .pipe(gulp.dest($active+$set+$CSS));
+          .pipe(gulp.dest($active+$set));
         
     } else {
         return gulp.src($active+$srcSCSS)
@@ -109,7 +111,7 @@ gulp.task('sass', function () {
                   outputStyle: 'compressed'})
                   .on('error', sass.logError))
             .pipe(autoprefixer())
-            .pipe(gulp.dest($active+$set+$CSS));
+            .pipe(gulp.dest($active+$set));
     }
 });
 
