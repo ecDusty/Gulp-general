@@ -1,4 +1,4 @@
-//Where is your project located???
+//The Projects object. A place to keep all your projects stored for use.
 var Projects = {
     Conrad: '../../Users/mulli/OneDrive/GitHub/lianatech-CMS/Conrad-landing/'
 }
@@ -10,6 +10,14 @@ var Projects = {
 ===============================*/
 
 var gulp = require('gulp');
+
+var srcMaps = require('gulp-sourcemaps');
+
+//STYLE Dependencies
+var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
+
+
 
 
 /*========================
@@ -25,7 +33,16 @@ var strt = '>---Starting ',
 var $test = 'dev/',
     $liv = 'live/',
     $src = 'src/',
-    $active = '';
+    $active = '',
+    $set = $test,
+    $JS = 'js/',
+    $CSS = 'css/',
+    $IMG = 'images/';
+
+//Sources File Variables
+var $srcHTML = 'src/{*.html,**/*.html}',
+    $srcSCSS = 'src/**/*.scss',
+    $srcJS = 'src/{libs,**}/*.js'
 
 /*====================
     Custom Functions
@@ -43,17 +60,57 @@ function talk (a,t) {
        TASKS
 =========================*/
 
+//Default Run Task
+gulp.task('default',['start'], /*function() {}*/);
+
 //START
 gulp.task('start', function () {
+    //Set the currently live project
     $active = Projects.Conrad;
+    talk('That active projects source: '+$active);
+    
     //add task to delete dev and live files
 });
 
 //SET THE PARAMATERS
 gulp.task('set-live', function () {
-    $active = $liv;
+    $set = $liv;
     console.log('Now the active directory: '+$active);
 });
-       
-gulp.task('default',['start','set-live']);
+gulp.task('set-dev', function () {
+    $set = $test;
+    console.log('Now the active directory: '+$active);
+});
+
+
+/*==============
+    STYLES TASKS
+    ============*/
+
+
+gulp.task('sass', function () {
+    talk('SASS styles going to "'+$set+'"',true);
+
+    if ($set === $test) {
+      return gulp.src($active+$srcSCSS)
+          .pipe(srcMaps.init())
+          .pipe(sass({sourceComments: true})
+                .on('error', sass.logError))
+          .pipe(autoprefixer())
+          .pipe(srcMaps.write())
+          .pipe(gulp.dest($active+$set+$CSS));
+        
+    } else {
+        return gulp.src($active+$srcSCSS)
+            .pipe(sass({
+                  outputStyle: 'compressed'})
+                  .on('error', sass.logError))
+            .pipe(autoprefixer())
+            .pipe(gulp.dest($active+$set+$CSS));
+    }
+});
+
+
+
+
           
