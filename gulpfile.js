@@ -62,8 +62,8 @@ function talk (a,t) {
 =========================*/
 
 //Default Run Task
-gulp.task('default',['start','sass'], function() {
-    gulp.watch($active+$srcSCSS,['sass'])
+gulp.task('default',['start','sass','set-live','sass','sass-live'], function() {
+    gulp.watch($active+$srcSCSS,['set-dev','sass','set-live','sass','sass-live'])
 });
 
 //START
@@ -97,6 +97,7 @@ gulp.task('sass', function () {
     talk('SASS styles going to "'+$set+'" at "'+$active+'"',true);
 
     if ($set === $test) {
+        talk('Running the '+$set);
       return gulp.src($active+$srcSCSS)
           .pipe(srcMaps.init())
           .pipe(sass({sourceComments: true})
@@ -105,7 +106,9 @@ gulp.task('sass', function () {
           .pipe(srcMaps.write())
           .pipe(gulp.dest($active+$set));
         
-    } else {
+    }
+    if ($set === $liv) {
+        talk('Running the '+$set);
         return gulp.src($active+$srcSCSS)
             .pipe(sass({
                   outputStyle: 'compressed'})
@@ -115,6 +118,20 @@ gulp.task('sass', function () {
     }
 });
 
+
+gulp.task('sass-live', function () {
+    talk('SASS styles going to "'+$set+'" at "'+$active+'"',true);
+
+    if ($set === $liv) {
+        talk('Running the '+$set);
+        return gulp.src($active+$srcSCSS)
+            .pipe(sass({
+                  outputStyle: 'compressed'})
+                  .on('error', sass.logError))
+            .pipe(autoprefixer())
+            .pipe(gulp.dest($active+$set));
+    }
+});
 
 
 
