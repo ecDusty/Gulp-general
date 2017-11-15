@@ -18,7 +18,7 @@ var srcMaps = require('gulp-sourcemaps');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
 
-
+//JAVASCRIP Dependencies
 
 
 /*========================
