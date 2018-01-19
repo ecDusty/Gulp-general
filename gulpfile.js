@@ -1,7 +1,8 @@
 //The Projects object. A place to keep all your projects stored for use.
-var SourceComputer = 'D:\\'; /*..\\..\\*/
+var SourceComputer = 'C:\\'; /*..\\..\\*/
 var Projects = {
     Conrad: SourceComputer+'Users\\mulli\\OneDrive\\GitHub\\lianatech-CMS\\Conrad-landing\\', /* D:\users\mulli\OneDrive\ */
+    AsiaPlantation: SourceComputer+'Users\\mulli\\OneDrive\\GitHub\\lianatech-CMS\\Asia-plantation\\'
 }
 
 /*=============================
@@ -69,7 +70,7 @@ gulp.task('default',['start','sass','set-live','sass','sass-live'], function() {
 //START
 gulp.task('start',function () {
     //Set the currently live project
-    $active = Projects.Conrad;
+    $active = Projects.AsiaPlantation;
     talk('That active projects source: '+$active);
     
     //add task to delete dev and live files
@@ -121,18 +122,13 @@ gulp.task('sass', function () {
 
 gulp.task('sass-live', function () {
     talk('SASS styles going to "'+$set+'" at "'+$active+'"',true);
-
-    if ($set === $liv) {
-        talk('Running the '+$set);
-        return gulp.src($active+$srcSCSS)
-            .pipe(sass({
-                  outputStyle: 'compressed'})
-                  .on('error', sass.logError))
-            .pipe(autoprefixer())
-            .pipe(gulp.dest($active+$set));
-    }
 });
 
 
 
+
+
+/*================
+    SCRIPT TASKS
+==================*/
           
