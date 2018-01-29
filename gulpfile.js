@@ -1,7 +1,8 @@
 //The Projects object. A place to keep all your projects stored for use.
-var SourceComputer = 'D:\\'; /*..\\..\\*/
+var SourceComputer = '..\\'; /*..\\D:\\*/
 var Projects = {
     Conrad: SourceComputer+'Users\\mulli\\OneDrive\\GitHub\\lianatech-CMS\\Conrad-landing\\', /* D:\users\mulli\OneDrive\ */
+    SNSProp: SourceComputer+'lianatech-CMS\\SNS Properties v2\\'
 }
 
 /*=============================
@@ -63,13 +64,13 @@ function talk (a,t) {
 
 //Default Run Task
 gulp.task('default',['start','sass'], function() {
-    gulp.watch($active+$srcSCSS,['sass'])
+    gulp.watch($active+$srcSCSS,['sass', 'set-live','sass-live','set-dev'])
 });
 
 //START
 gulp.task('start',function () {
     //Set the currently live project
-    $active = Projects.Conrad;
+    $active = Projects.SNSProp;
     talk('That active projects source: '+$active);
     
     //add task to delete dev and live files
@@ -113,6 +114,17 @@ gulp.task('sass', function () {
             .pipe(autoprefixer())
             .pipe(gulp.dest($active+$set));
     }
+});
+
+gulp.task('sass-live', function () {
+    talk('SASS styles going to "'+$set+'" at "'+$active+'"',true);
+
+        return gulp.src($active+$srcSCSS)
+            .pipe(sass({
+                  outputStyle: 'compressed'})
+                  .on('error', sass.logError))
+            .pipe(autoprefixer())
+            .pipe(gulp.dest($active+$set));
 });
 
 
