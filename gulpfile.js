@@ -63,8 +63,8 @@ function talk (a,t) {
 =========================*/
 
 //Default Run Task
-gulp.task('default',['start','sass'], function() {
-    gulp.watch($active+$srcSCSS,['sass', 'set-live','sass-live','set-dev'])
+gulp.task('default',['start'], function() {
+    gulp.watch($active+$srcSCSS,['set-dev','sass','set-live','sass-live'])
 });
 
 //START
@@ -96,24 +96,13 @@ gulp.task('set-dev', function () {
 
 gulp.task('sass', function () {
     talk('SASS styles going to "'+$set+'" at "'+$active+'"',true);
-
-    if ($set === $test) {
-      return gulp.src($active+$srcSCSS)
-          .pipe(srcMaps.init())
-          .pipe(sass({sourceComments: true})
-                .on('error', sass.logError))
-          .pipe(autoprefixer())
-          .pipe(srcMaps.write())
-          .pipe(gulp.dest($active+$set));
-        
-    } else {
-        return gulp.src($active+$srcSCSS)
-            .pipe(sass({
-                  outputStyle: 'compressed'})
-                  .on('error', sass.logError))
-            .pipe(autoprefixer())
-            .pipe(gulp.dest($active+$set));
-    }
+    return gulp.src($active+$srcSCSS)
+        .pipe(srcMaps.init())
+        .pipe(sass({sourceComments: true})
+            .on('error', sass.logError))
+        .pipe(autoprefixer())
+        .pipe(srcMaps.write())
+        .pipe(gulp.dest($active+$set));
 });
 
 gulp.task('sass-live', function () {
