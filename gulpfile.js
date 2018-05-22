@@ -53,10 +53,8 @@ var $srcHTML = 'src/{*.html,**/*.html}',
 =====================*/
 
 function $t (a,t) {
-    if (t) 
-        console.log(strt+a+cls);
-    else   
-        console.log(a);
+    if (t) { console.log(strt+a+cls); }
+    else { console.log(a); }  
 }
 
 
@@ -66,7 +64,7 @@ function $t (a,t) {
 
 //Default Run Task
 gulp.task('default',['start'], function() {
-    gulp.watch($active+$srcSCSS,['set-dev','sass','set-live','sass-live'])
+    gulp.watch({$active+$srcSCSS,$active+$srcJS},['set-dev','sass','set-live','sass-live'])
 });
 
 //START
