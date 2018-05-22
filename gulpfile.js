@@ -19,8 +19,10 @@ var srcMaps = require('gulp-sourcemaps');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
 
-//JAVASCRIP Dependencies
-
+//JAVASCRIPT Dependencies
+var eslint = require('gulp-eslint');
+var uglify = require('gulp-uglify');
+var babel = require('gulp-babel');
 
 /*========================
        VARIABLES
@@ -43,14 +45,14 @@ var $test = 'dev/',
 
 //Sources File Variables
 var $srcHTML = 'src/{*.html,**/*.html}',
-    $srcSCSS = 'src/{sass,**}/*.scss',
-    $srcJS = 'src/{libs,**}/*.js'
+    $srcSCSS = 'src/{sass,**/sass}/*.scss',
+    $srcJS = 'src/{libs,**/libs}/*.js'
 
 /*====================
     Custom Functions
 =====================*/
 
-function talk (a,t) {
+function $t (a,t) {
     if (t) 
         console.log(strt+a+cls);
     else   
@@ -71,7 +73,7 @@ gulp.task('default',['start'], function() {
 gulp.task('start',function () {
     //Set the currently live project
     $active = Projects.SNSProp;
-    talk('That active projects source: '+$active);
+    $t('That active projects source: '+$active);
     
     //add task to delete dev and live files
 });
@@ -81,32 +83,46 @@ gulp.task('live', ['set-live','default']);
 //SET THE PARAMATERS
 gulp.task('set-live', function () {
     $set = $liv;
-    console.log('Now the active directory: '+$set);
+    $t('Now the active directory: '+$set);
 });
 gulp.task('set-dev', function () {
     $set = $test;
-    console.log('Now the active directory: '+$set);
+    $t('Now the active directory: '+$set);
 });
 
 
-/*==============
+/*=================
     STYLES TASKS
-    ============*/
+    =============*/
 
 
 gulp.task('sass', function () {
-    talk('SASS styles going to "'+$set+'" at "'+$active+'"',true);
+    $t('SASS styles going to "'+$set+'" at "'+$active+'"',true);
     return gulp.src($active+$srcSCSS)
         .pipe(srcMaps.init())
-        .pipe(sass({sourceComments: true})
-            .on('error', sass.logError))
-        .pipe(autoprefixer())
+        .pipe(sass.sync({
+                    sourceComments: true,
+                    includePaths: ['node_modules/'],
+                })
+                .on('error', function errorHandler (err) {
+                    gutil.log(gutil.colors.red('ERROR:', err.message));
+                    notifier.notify({
+                        title: 'Compile Error',
+                        message: err.message,
+                        sound: true,
+                    });
+                    this.emit('end');
+                }),)
+        .pipe(autoprefixer({
+                browsers: ['last 30 version']
+            })
+        )
         .pipe(srcMaps.write())
         .pipe(gulp.dest($active+$set));
 });
 
 gulp.task('sass-live', function () {
-    talk('SASS styles going to "'+$set+'" at "'+$active+'"',true);
+    $t('SASS styles going to "'+$set+'" at "'+$active+'"',true);
 
         return gulp.src($active+$srcSCSS)
             .pipe(sass({
@@ -116,6 +132,42 @@ gulp.task('sass-live', function () {
             .pipe(gulp.dest($active+$set));
 });
 
+
+/*===================
+    JAVASCRIPT TASKS
+    ===============*/
+
+//LINT you JS FOOL!
+gulp.task('lint', function () {
+    console.log(strt + 'Linting' + end);
+    return gulp.src(SCRIPTS_PATH)
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failOnError());
+  })
+
+
+    gulp.task('js',['lint'], function () {
+        $t('JAVASCRIPT styles going to "'+$set+'" at "'+$active+'"',true);
+        return gulp.src($active+$srcSCSS)
+            .pipe(srcMaps.init())
+            .pipe(sass({sourceComments: true})
+                .on('error', sass.logError))
+            .pipe(autoprefixer())
+            .pipe(srcMaps.write())
+            .pipe(gulp.dest($active+$set));
+    });
+    
+    gulp.task('js-live', function () {
+        $t('JAVASCRIPT styles going to "'+$set+'" at "'+$active+'"',true);
+    
+            return gulp.src($active+$srcSCSS)
+                .pipe(sass({
+                      outputStyle: 'compressed'})
+                      .on('error', sass.logError))
+                .pipe(autoprefixer())
+                .pipe(gulp.dest($active+$set));
+    });
 
 
 
