@@ -3,7 +3,8 @@ alert('WHAT HAPPENS WITH AN ALERT IN GIT??')
 //The Projects object. A place to keep all your projects stored for use.
 var SourceComputer = '..\\'; /*..\\D:\\*/
 var Projects = {
-    Conrad: SourceComputer+'Users\\mulli\\OneDrive\\GitHub\\lianatech-CMS\\Conrad-landing\\', /* D:\users\mulli\OneDrive\ */
+    Gulp: SourceCOmputer+'\\Github\\'
+    Conrad: SourceComputer+'lianatech-CMS\\Conrad-landing\\', /* D:\users\mulli\OneDrive\ */
     SNSProp: SourceComputer+'lianatech-CMS\\SNS Properties v2\\'
 }
 
@@ -39,7 +40,7 @@ var strt = '>---Starting ',
 var $test = 'dev/',
     $liv = 'live/',
     $src = 'src/',
-    $active = '',
+    $active = Projects.Gulp, //Set the Project your working on
     $set = $test,
     $JS = 'js',
     $CSS = 'css',
@@ -73,7 +74,6 @@ gulp.task('default',['start'], function() {
 //START
 gulp.task('start',function () {
     //Set the currently live project
-    $active = Projects.SNSProp;
     $t('That active projects source: '+$active);
     
     //add task to delete dev and live files
@@ -148,20 +148,20 @@ gulp.task('lint', function () {
   })
 
 
-    gulp.task('js',['lint'], function () {
-        $t('JAVASCRIPT styles going to "'+$set+'" at "'+$active+'"',true);
-        return gulp.src($active+$srcJS)
-            .pipe(srcMaps.init())
-            .pipe(srcMaps.write())
+gulp.task('js',['lint'], function () {
+    $t('JAVASCRIPT styles going to "'+$set+'" at "'+$active+'"',true);
+    return gulp.src($active+$srcJS)
+        .pipe(srcMaps.init())
+        .pipe(srcMaps.write())
+        .pipe(gulp.dest($active+$set));
+});
+
+gulp.task('js-live', function () {
+    $t('JAVASCRIPT styles going to "'+$set+'" at "'+$active+'"',true);
+
+        return gulp.src($active+$srJS)
             .pipe(gulp.dest($active+$set));
-    });
-    
-    gulp.task('js-live', function () {
-        $t('JAVASCRIPT styles going to "'+$set+'" at "'+$active+'"',true);
-    
-            return gulp.src($active+$srJS)
-                .pipe(gulp.dest($active+$set));
-    });
+});
 
 
 
