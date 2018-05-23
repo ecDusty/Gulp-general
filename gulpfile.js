@@ -1,3 +1,5 @@
+alert('WHAT HAPPENS WITH AN ALERT IN GIT??')
+
 //The Projects object. A place to keep all your projects stored for use.
 var SourceComputer = '..\\'; /*..\\D:\\*/
 var Projects = {
