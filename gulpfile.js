@@ -66,7 +66,8 @@ function $t (a,t) {
 
 //Default Run Task
 gulp.task('default',['start'], function() {
-    gulp.watch({$active+$srcSCSS,$active+$srcJS},['set-dev','sass','set-live','sass-live'])
+    gulp.watch($active+$srcSCSS,['set-dev','sass','set-live','sass-live']) 
+    gulp.watch($active+$srcJS,['set-dev','js','set-live','js-live'])
 });
 
 //START
@@ -139,7 +140,7 @@ gulp.task('sass-live', function () {
 
 //LINT you JS FOOL!
 gulp.task('lint', function () {
-    console.log(strt + 'Linting' + end);
+    $t(strt + 'Linting' + end);
     return gulp.src(SCRIPTS_PATH)
     .pipe(eslint())
     .pipe(eslint.format())
@@ -149,11 +150,8 @@ gulp.task('lint', function () {
 
     gulp.task('js',['lint'], function () {
         $t('JAVASCRIPT styles going to "'+$set+'" at "'+$active+'"',true);
-        return gulp.src($active+$srcSCSS)
+        return gulp.src($active+$srcJS)
             .pipe(srcMaps.init())
-            .pipe(sass({sourceComments: true})
-                .on('error', sass.logError))
-            .pipe(autoprefixer())
             .pipe(srcMaps.write())
             .pipe(gulp.dest($active+$set));
     });
@@ -161,11 +159,7 @@ gulp.task('lint', function () {
     gulp.task('js-live', function () {
         $t('JAVASCRIPT styles going to "'+$set+'" at "'+$active+'"',true);
     
-            return gulp.src($active+$srcSCSS)
-                .pipe(sass({
-                      outputStyle: 'compressed'})
-                      .on('error', sass.logError))
-                .pipe(autoprefixer())
+            return gulp.src($active+$srJS)
                 .pipe(gulp.dest($active+$set));
     });
 
